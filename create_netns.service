@@ -2,7 +2,7 @@
 Description=Create network namespaces on startup service unit file.
 
 [Service]
-ExecStart=/bin/bash /usr/sbin/mamange_netns.sh
+ExecStart=/bin/bash /usr/sbin/manage_netns.sh
 
 [Install]
 WantedBy=multi-user.target

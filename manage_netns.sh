@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NETNS_FILES="/root/netns/ns/*"
+NETNS_FILES="/home/lab/ns/*"
 
 ns_list=$(ip netns list)
 
@@ -30,7 +30,7 @@ for f in $NETNS_FILES; do
       printf "\n******* The $ns network namespace already exists and no reconfiguration is needed. *******\n"
       printf "\n*************************** Skipping ****************************\n\n"
     fi
-    done < /root/netns/ns/$ns
+    done < /home/lab/ns/$ns
     continue
   fi
   ip netns add $ns
@@ -45,5 +45,5 @@ for f in $NETNS_FILES; do
     ip netns exec $ns ip addr add $ipaddress dev $interface
     printf "\n******* Configured $interface interface in $ns network namespace *******\n"
     printf "\n******* $interface interface is in $ns network namespace and has $ipaddress address *******\n\n"
-  done < /root/netns/ns/$ns
+  done < /home/lab/ns/$ns
 done
