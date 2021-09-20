@@ -41,7 +41,7 @@ network:
       addresses: [ 192.168.200.1/31 ]   
 
 
-The vlan.2 sub-interface is used in the default network namespace to provide a means for synchronization for systemd-timesyncd service on the jump host - this is specific to my lab. You may opt to getting ntp data from publicly available ntp servers.
+The vlan.2 sub-interface is used in the default network namespace to provide a means for synchronization for systemd-timesyncd service on the jump host - this is specific to my lab. You may opt to getting ntp data from publicly available ntp servers, in which case you will not need the definition of a sub-interface in the 02-netcfg.yaml file, just a definition for ens4.  
 
 Deleting network namespaces is currently not supported - this functionality will  be added in one of the next commits.  
 
