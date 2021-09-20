@@ -4,6 +4,34 @@ NETNS_FILES="/home/lab/ns/*"
 
 ns_list=$(ip netns list)
 
+
+edit_netns_interface () {
+  
+  # $1 - netns, $2 - int, $3 - vlan_id, $4 - ip_add
+  ip netns exec $1 ip link del $2
+  ip link add link ens4 name $2 type vlan protocol 802.1Q id $3
+  ip link set $2 netns $1
+  ip netns exec $1 ip link set dev $2 up
+  ip netns exec $1 ip addr add $4 dev $2
+
+}
+
+create_configure_netns () {
+
+  # $1 - netns, $2 - int, $3 - vlan_id, $4 - ip_add
+  if [[ "$ns_list" != *"$ns"* ]]
+  then
+    ip netns add $ns
+  fi
+  ip link add link ens4 name $2 type vlan protocol 802.1Q id $3
+  ip link set $2 netns $1
+  ip netns exec $1 ip link set dev $2 up
+  ip netns exec $1 ip addr add $4 dev $2
+
+}
+
+ip link set dev ens4 up
+
 for f in $NETNS_FILES; do
   ns=$(echo $f | cut -d "/" -f 5)
   if [[ "$ns_list" == *"$ns"* ]]
@@ -20,11 +48,7 @@ for f in $NETNS_FILES; do
     then
       printf "\n******* An interface in the $ns network namespace has changed. *******\n"
       printf "\n************************ Reconfiguring **********************\n"
-      ip netns exec $ns ip link del $tmp_interface
-      ip link add link ens4 name $interface type vlan protocol 802.1Q id $vlan
-      ip link set $interface netns $ns
-      ip netns exec $ns ip link set dev $interface up
-      ip netns exec $ns ip addr add $ipaddress dev $interface
+      edit_netns_interface "$ns" "$interface" "$vlan" "$ipaddress"
       printf "\n******* The $interface interafce in the $ns network namespace was reconfigured. *******\n\n"
     else
       printf "\n******* The $ns network namespace already exists and no reconfiguration is needed. *******\n"
@@ -33,16 +57,12 @@ for f in $NETNS_FILES; do
     done < /home/lab/ns/$ns
     continue
   fi
-  ip netns add $ns
   while read line; do
     interface=$(echo $line | awk '{print $1}')
     vlan=$(echo $line | awk '{print $2}')
     ipaddress=$(echo $line | awk '{print $3}')
     printf "\n******* Creatig and configuring the $ns network namespace. *******\n"
-    ip link add link ens4 name $interface type vlan protocol 802.1Q id $vlan
-    ip link set $interface netns $ns
-    ip netns exec $ns ip link set dev $interface up
-    ip netns exec $ns ip addr add $ipaddress dev $interface
+    create_configure_netns "$ns" "$interface" "$vlan" "$ipaddress"
     printf "\n******* Configured $interface interface in $ns network namespace *******\n"
     printf "\n******* $interface interface is in $ns network namespace and has $ipaddress address *******\n\n"
   done < /home/lab/ns/$ns
