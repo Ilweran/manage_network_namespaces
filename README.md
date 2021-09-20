@@ -21,7 +21,29 @@ The structure of the file is this:
 
 device    vlan_id    ip_address/mask  
 
-The script parses the file and either adds a netns or re-configures exsisting one. Deleting network namespaces is currently not supported - this functionality will  be added in one of the next commits.  
+The script parses each file and either adds a netns or re-configures exsisting one. NOTICE that the main interface on which all the sub-interfaces are created is  hardcoded into the script as ens4. This means it must be created prior to running the script with the service. I used netplan and the following yaml file under /etc/netplan to account for the ens4 interface:
+
+cat /etc/netplan/02-netcfg.yaml  
+\# This file describes the network interfaces available on your system  
+\# For more information, see netplan(5).  
+network:  
+  version: 2  
+  renderer: networkd  
+  ethernets:  
+    ens4:  
+      match:  
+        name: ens4  
+  vlans:  
+    vlan.2:  
+      id: 2  
+      link: ens4  
+      dhcp4: no  
+      addresses: [ 192.168.200.1/31 ]   
+
+
+The vlan.2 sub-interface is used in the default network namespace to provide a means for synchronization for systemd-timesyncd service on the jump host - this is specific to my lab. You may opt to getting ntp data from publicly available ntp servers.
+
+Deleting network namespaces is currently not supported - this functionality will  be added in one of the next commits.  
 
 
 
