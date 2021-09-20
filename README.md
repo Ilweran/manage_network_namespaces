@@ -15,7 +15,7 @@ cfg01-jump:/home/lab/ns#
 
 Each files must be named after the name of corresponding netns. Each file contains lines that describe interfaces in the network namespace like the following:
 
-vlan.201 201 192.168.200.1/31.  
+vlan.201 201 192.168.200.1/31  
 
 The structure of the file is this:
 
