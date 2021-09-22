@@ -131,3 +131,13 @@ else
     fi
   done
 fi
+while true; do
+
+  #Some monitoring code for future
+  #Also this loop holds the service
+  #in the active (running) state as
+  #shown in the output of 
+  #systemctl status create-netns.service
+  sleep 10
+
+done
