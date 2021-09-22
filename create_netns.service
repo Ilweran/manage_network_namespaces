@@ -1,5 +1,5 @@
 [Unit]
-Description=Create network namespaces on startup service unit file.
+Description=A service unit to manage network namespaces.
 
 [Service]
 Type=simple
