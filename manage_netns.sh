@@ -12,6 +12,7 @@ edit_netns_interface () {
   ip netns exec $1 ip link del $2
   ip link add link ens4 name $2 type vlan protocol 802.1Q id $3
   ip link set $2 netns $1
+  ip netns exec $1 ip link set dev lo up
   ip netns exec $1 ip link set dev $2 up
   ip netns exec $1 ip addr add $4 dev $2
 
@@ -26,6 +27,7 @@ create_configure_netns () {
   fi
   ip link add link ens4 name $2 type vlan protocol 802.1Q id $3
   ip link set $2 netns $1
+  ip netns exec $1 ip link set dev lo up
   ip netns exec $1 ip link set dev $2 up
   ip netns exec $1 ip addr add $4 dev $2
 
