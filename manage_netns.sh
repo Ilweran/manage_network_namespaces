@@ -1,7 +1,7 @@
 #!/bin/bash
 
-NETNS_FILES="/home/lab/ns/*"
-NETNS_DIR="/home/lab/ns/"
+NETNS_FILES="/srv/manage_netns/ns/*"
+NETNS_DIR="/srv/manage_netns/ns/"
 
 ns_list=$(ip netns list)
 
@@ -49,8 +49,9 @@ if [[ "$(ip netns list | wc -l)" > "$(ls "$NETNS_DIR" | wc -l)" ]]; then
     done
   done
   for i in "${!netns_array[@]}"; do
-    printf "\n**  Deleting ${array[i]} network namespace  **\n"
+    printf "\n**  Deleting ${netns_array[i]} network namespace  **\n"
     ip netns delete "${netns_array[i]}"
+    printf "\n**  Deleted ${netns_array[i]} network namespace  **\n"
   done
 
 elif [[ "$(ip netns list | wc -l)" < "$(ls "$NETNS_DIR" | wc -l)" ]]; then
@@ -87,7 +88,7 @@ elif [[ "$(ip netns list | wc -l)" < "$(ls "$NETNS_DIR" | wc -l)" ]]; then
       printf "\n***************************************************************************************\n"
       printf "\n**$interface interface is in "${netnsfile_array[i]}" network namespace and has $ipaddress address    **\n"
       printf "\n***************************************************************************************\n\n"
-    done < /home/lab/ns/${netnsfile_array[i]}
+    done < ${NETNS_DIR}${netnsfile_array[i]}
   done
 
 else
@@ -126,7 +127,7 @@ else
           printf "\n**                                    Skipping...                                    **\n"
           printf "\n***************************************************************************************\n\n"
         fi
-    done < /home/lab/ns/$ns
+    done < ${NETNS_DIR}${ns}
     continue
     fi
   done
