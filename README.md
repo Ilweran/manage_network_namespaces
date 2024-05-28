@@ -13,7 +13,7 @@ drwxr-xr-x 6 lab  lab  4096 Sep 10 17:36 ../
 -rw-r--r-- 1 root root   30 Sep 10 17:39 isp_as7  
 cfg01-jump:/home/lab/ns#
 
-Each files must be named after the name of corresponding netns. Each file contains lines that describe interfaces in the network namespace like the following:
+Each file must be named after the name of corresponding netns. Each file contains lines that describe interfaces in the network namespace like the following:
 
 vlan.201 201 192.168.200.1/31  
 
@@ -43,7 +43,6 @@ network:
 
 The vlan.2 sub-interface is used in the default network namespace to provide a means for synchronization for systemd-timesyncd service on the jump host - this is specific to my lab. You may opt to getting ntp data from publicly available ntp servers, in which case you will not need the definition of a sub-interface in the 02-netcfg.yaml file, just a definition for ens4.  
 
-Deleting network namespaces is currently not supported - this functionality will  be added in one of the next commits.  
 
 
 
